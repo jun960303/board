@@ -1,0 +1,45 @@
+package com.example.board.post.service;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import com.example.board.post.dto.BoardDTO;
+import com.example.board.post.dto.PageRequestDTO;
+import com.example.board.post.entity.Board;
+import com.example.board.post.repository.BoardRespository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
+@Service
+@RequiredArgsConstructor
+public class BoardService {
+
+    private final BoardRespository boardRespository;
+
+    // crud
+    public Page<Board> getList(PageRequestDTO requestDTO) {
+
+        Pageable pageable = PageRequest.of(requestDTO.getPage(), requestDTO.getSize(), Sort.by("bno").descending());
+
+        Page<Board> result = boardRespository.findAll(pageable);
+
+        return result;
+    }
+
+    public void getRow(Long bno) {
+    }
+
+    public void insert(BoardDTO dto) {
+    }
+
+    public void update(BoardDTO dto) {
+    }
+
+    public void delete(BoardDTO dto) {
+    }
+}
