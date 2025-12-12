@@ -31,6 +31,8 @@ public class QBoard extends EntityPathBase<Board> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
+    public final ListPath<com.example.board.reply.entity.Reply, com.example.board.reply.entity.QReply> replies = this.<com.example.board.reply.entity.Reply, com.example.board.reply.entity.QReply>createList("replies", com.example.board.reply.entity.Reply.class, com.example.board.reply.entity.QReply.class, PathInits.DIRECT2);
+
     public final StringPath title = createString("title");
 
     //inherited

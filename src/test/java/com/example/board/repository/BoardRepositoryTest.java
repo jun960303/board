@@ -2,11 +2,17 @@ package com.example.board.repository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.board.member.entity.Member;
@@ -73,7 +79,7 @@ public class BoardRepositoryTest {
   @Transactional(readOnly = true)
   @Test
   public void readBoardTest() {
-
+    // JPA 제공
     List<Board> list = boardRespository.findAll();
     list.forEach(board -> {
       System.out.println(board);
@@ -82,12 +88,76 @@ public class BoardRepositoryTest {
   }
 
   @Test
-  public void getBoardWithWriterTest() {
+  public void getBoardWithWriterListTest() {
 
-    List<Object[]> result = boardRespository.getBoardWithWriter();
+    // [Board(bno=98, title=title....98, content=content....98),
+    // Member(email=user9@gmail.com, password=1111, name=user9)]
+    List<Object[]> result = boardRespository.getBoardWithWriterList();
     for (Object[] objects : result) {
       System.out.println(Arrays.toString(objects));
     }
+  }
+
+  @Transactional(readOnly = true)
+  @Test
+  public void getBoardWithWriterTest() {
+    // JPA
+    Board board = boardRespository.findById(33L).get();
+    System.out.println(board);
+    // 댓글 가져오기
+    System.out.println(board.getReplies());
+  }
+
+  @Test
+  public void getBoardWithWriterTest2() {
+    // JPQL(@Query)
+    List<Object[]> result = boardRespository.getBoardWithReply(33L);
+    // for (Object[] objects : result) {
+    // System.out.println(Arrays.toString(objects));
+    // }
+
+    result.forEach(obj -> System.out.println(Arrays.toString(obj)));
+  }
+
+  @Test
+  public void getBoardWithReplyCountTest() {
+
+    Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
+
+    Page<Object[]> result = boardRespository.getBoardWithReplyCount(pageable);
+    // for (Object[] objects : result) {
+    // // System.out.println(Arrays.toString(objects));
+    // Board board = (Board) objects[0];
+    // Member member = (Member) objects[1];
+    // Long replyCnt = (Long) objects[2];
+    // System.out.println(board);
+    // System.out.println(member);
+    // System.out.println(replyCnt);
+    // }
+
+    // Stream<Object[]> data = result.get();
+    // Stream<Object[]> data2 = result.getContent().stream();
+
+    result.get().forEach(obj -> {
+      // System.out.println(Arrays.toString(obj);
+      Board board = (Board) obj[0];
+      Member member = (Member) obj[1];
+      Long replyCnt = (Long) obj[2];
+    });
+
+    // Object[] => String
+    Function<Object[], String> f = Arrays::toString;
+
+    // Object[] objects
+    result.get().forEach(obj -> System.out.println(f.apply(obj))); // [Ljava.lang.Object;@2a19eaf0
+  }
+
+  // deltet 테스트
+  @Transactional
+  @Test
+  public void deleteByBnoTest() {
+    replyRepository.deleteByBno(91L);
+    boardRespository.deleteById(91L);
   }
 
   // querydsl 테스트
