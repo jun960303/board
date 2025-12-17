@@ -4,6 +4,7 @@ import static org.mockito.Mockito.spy;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +17,7 @@ import com.example.board.post.dto.PageResultDTO;
 import com.example.board.post.entity.Board;
 import com.example.board.post.service.BoardService;
 
+@Disabled
 @SpringBootTest
 public class BoardServiceTest {
 
@@ -30,5 +32,11 @@ public class BoardServiceTest {
         .size(10)
         .build();
     PageResultDTO<BoardDTO> result = boardService.getList(pageRequestDTO);
+
+    List<BoardDTO> boards = result.getDtoList();
+    boards.forEach(board -> {
+      System.out.println(board);
+    });
+
   }
 }

@@ -1,41 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.example.board.service.BoardServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-12-12T09:14:37.136Z" hostname="BOOK-6Q667FM14I" time="0.026">
+<testsuite name="com.example.board.service.BoardServiceTest" tests="1" skipped="1" failures="0" errors="0" timestamp="2025-12-17T08:07:36.966Z" hostname="BOOK-6Q667FM14I" time="0.001">
   <properties/>
-  <testcase name="getListTest()" classname="com.example.board.service.BoardServiceTest" time="0.026"/>
-  <system-out><![CDATA[2025-12-12T18:14:37.110+09:00  INFO 26732 --- [board] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.board.service.BoardServiceTest]: BoardServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2025-12-12T18:14:37.128+09:00  INFO 26732 --- [board] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.board.BoardApplication for test class com.example.board.service.BoardServiceTest
-2025-12-12T18:14:37.146+09:00 DEBUG 26732 --- [board] [    Test worker] org.hibernate.SQL                        : 
-    ?[34mselect?[0m
-        b1_0.bno,
-        b1_0.content,
-        b1_0.create_date,
-        b1_0.title,
-        b1_0.update_date,
-        b1_0.email,
-        w1_0.email,
-        w1_0.name,
-        w1_0.password,
-        count(r1_0.rno) 
-    ?[34mfrom?[0m
-        boardtbl b1_0 
-    ?[34mleft?[0m ?[34mjoin?[0m
-        board_member w1_0 
-            ?[34mon?[0m w1_0.email=b1_0.email 
-    ?[34mleft?[0m ?[34mjoin?[0m
-        replytbl r1_0 
-            ?[34mon?[0m r1_0.bno=b1_0.bno 
-    ?[34mgroup?[0m ?[34mby?[0m
-        b1_0.bno 
-    ?[34morder?[0m ?[34mby?[0m
-        b1_0.bno desc 
-    limit
-        ?
-2025-12-12T18:14:37.146+09:00 TRACE 26732 --- [board] [    Test worker] org.hibernate.orm.jdbc.bind              : binding parameter (1:INTEGER) <- [10]
-2025-12-12T18:14:37.149+09:00 DEBUG 26732 --- [board] [    Test worker] org.hibernate.SQL                        : 
-    ?[34mselect?[0m
-        count(b1_0.bno) 
-    ?[34mfrom?[0m
-        boardtbl b1_0
-]]></system-out>
+  <testcase name="getListTest()" classname="com.example.board.service.BoardServiceTest" time="0.001">
+    <skipped/>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

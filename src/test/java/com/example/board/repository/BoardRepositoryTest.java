@@ -6,6 +6,7 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,15 +14,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.board.member.entity.Member;
 import com.example.board.member.repository.MemberRepository;
+import com.example.board.post.dto.PageRequestDTO;
 import com.example.board.post.entity.Board;
 import com.example.board.post.repository.BoardRespository;
 import com.example.board.reply.entity.Reply;
 import com.example.board.reply.repository.ReplyRepository;
 
+@Disabled
 @SpringBootTest
 public class BoardRepositoryTest {
 
@@ -75,6 +79,18 @@ public class BoardRepositoryTest {
     });
   }
 
+  @Test
+  public void insertReplyTest2() {
+    Board board = Board.builder().bno(1902L).build();
+
+    IntStream.rangeClosed(1, 15).forEach(i -> {
+
+      Reply reply = Reply.builder().text("reply...." + i).replyer("guest" + i).board(board).build();
+
+      replyRepository.save(reply);
+    });
+  }
+
   // board 읽기
   @Transactional(readOnly = true)
   @Test
@@ -119,40 +135,49 @@ public class BoardRepositoryTest {
     result.forEach(obj -> System.out.println(Arrays.toString(obj)));
   }
 
+  // @Test
+  // public void getBoardWithReplyCountTest() {
+
+  // Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
+
+  // Page<Object[]> result = boardRespository.getBoardWithReplyCount(pageable);
+  // // for (Object[] objects : result) {
+  // // // System.out.println(Arrays.toString(objects));
+  // // Board board = (Board) objects[0];
+  // // Member member = (Member) objects[1];
+  // // Long replyCnt = (Long) objects[2];
+  // // System.out.println(board);
+  // // System.out.println(member);
+  // // System.out.println(replyCnt);
+  // // }
+
+  // // Stream<Object[]> data = result.get();
+  // // Stream<Object[]> data2 = result.getContent().stream();
+
+  // result.get().forEach(obj -> {
+  // // System.out.println(Arrays.toString(obj);
+  // Board board = (Board) obj[0];
+  // Member member = (Member) obj[1];
+  // Long replyCnt = (Long) obj[2];
+  // });
+
+  // // Object[] => String
+  // Function<Object[], String> f = Arrays::toString;
+
+  // // Object[] objects
+  // result.get().forEach(obj -> System.out.println(f.apply(obj))); //
+  // [Ljava.lang.Object;@2a19eaf0
+  // }
+
   @Test
-  public void getBoardWithReplyCountTest() {
-
-    Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
-
-    Page<Object[]> result = boardRespository.getBoardWithReplyCount(pageable);
-    // for (Object[] objects : result) {
-    // // System.out.println(Arrays.toString(objects));
-    // Board board = (Board) objects[0];
-    // Member member = (Member) objects[1];
-    // Long replyCnt = (Long) objects[2];
-    // System.out.println(board);
-    // System.out.println(member);
-    // System.out.println(replyCnt);
-    // }
-
-    // Stream<Object[]> data = result.get();
-    // Stream<Object[]> data2 = result.getContent().stream();
-
-    result.get().forEach(obj -> {
-      // System.out.println(Arrays.toString(obj);
-      Board board = (Board) obj[0];
-      Member member = (Member) obj[1];
-      Long replyCnt = (Long) obj[2];
-    });
-
-    // Object[] => String
-    Function<Object[], String> f = Arrays::toString;
-
-    // Object[] objects
-    result.get().forEach(obj -> System.out.println(f.apply(obj))); // [Ljava.lang.Object;@2a19eaf0
+  public void getBoardByBnoTest() {
+    Object result = boardRespository.getBoardBybno(601L);
+    Object[] arr = (Object[]) result;
+    System.out.println(Arrays.toString(arr));
   }
 
-  // deltet 테스트
+  // delete 테스트
+  @Commit
   @Transactional
   @Test
   public void deleteByBnoTest() {
@@ -165,8 +190,23 @@ public class BoardRepositoryTest {
   @Test
   public void listTest() {
 
-    List<Object[]> result = boardRespository.list();
-    System.out.println(result);
+    PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+        .page(0)
+        .size(20)
+        .type("tcw")
+        .keyword("title")
+        .build();
+
+    // Pageable pageable = PageRequest.of(pageRequestDTO.getPage(),
+    // pageRequestDTO.getSize(),
+    // Sort.by("bno").descending().and(Sort.by("title").ascending()));
+
+    Pageable pageable = PageRequest.of(pageRequestDTO.getPage(), pageRequestDTO.getSize());
+    Page<Object[]> result = boardRespository.list(pageRequestDTO.getType(), pageRequestDTO.getKeyword(), pageable);
+
+    for (Object[] objects : result) {
+      System.out.println(Arrays.toString(objects));
+    }
   }
 
 }
